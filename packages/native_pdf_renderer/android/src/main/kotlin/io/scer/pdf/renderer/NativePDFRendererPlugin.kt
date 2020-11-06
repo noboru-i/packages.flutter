@@ -64,23 +64,23 @@ class NativePDFRendererPlugin(private val registrar: Registrar) : MethodCallHand
     }
 
     private fun openDocumentFileHandler(call: MethodCall, result: Result) {
-        try {
-            val path = call.arguments<String>()!!
-            Thread {
+        val path = call.arguments<String>()!!
+        Thread {
+            try {
                 val documentRenderer = openFileDocument(File(path))
                 result.success(documents.register(documentRenderer).infoMap)
-            }.start()
-        } catch (e: NullPointerException) {
-            result.error("PDF_RENDER", "Need call arguments: path", null)
-        } catch (e: FileNotFoundException) {
-            result.error("PDF_RENDER", "File not found", null)
-        } catch (e: IOException) {
-            result.error("PDF_RENDER", "Can't open file", null)
-        } catch (e: CreateRendererException) {
-            result.error("PDF_RENDER", "Can't create PDF renderer", null)
-        } catch (e: Exception) {
-            result.error("PDF_RENDER", "Unknown error", null)
-        }
+            } catch (e: NullPointerException) {
+                result.error("PDF_RENDER", "Need call arguments: path", null)
+            } catch (e: FileNotFoundException) {
+                result.error("PDF_RENDER", "File not found", null)
+            } catch (e: IOException) {
+                result.error("PDF_RENDER", "Can't open file", null)
+            } catch (e: CreateRendererException) {
+                result.error("PDF_RENDER", "Can't create PDF renderer", null)
+            } catch (e: Exception) {
+                result.error("PDF_RENDER", "Unknown error", null)
+            }
+        }.start()
     }
 
     private fun openDocumentAssetHandler(call: MethodCall, result: Result) {
